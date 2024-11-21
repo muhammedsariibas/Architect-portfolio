@@ -1,48 +1,155 @@
 <template >
   <div class="about" data-aos="fade-up" data-aos-duration="600">
     <h2 class="title-decorative">
-      <span class="title-decorative-letter">About</span>
+      <span class="title-decorative-letter">HAKKIMIZDA</span>
     </h2>
 
     <div class="first">
-      <h3>About Me</h3>
+      <h3>Hakkımızda</h3>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab repudiandae
-        accusamus quasi optio accusantium, magnam provident hic id eos beatae,
-        fugiat quibusdam sit fuga aliquid rem corrupti voluptatibus ut iste non
-        laborum deserunt deleniti. Ipsam exercitationem ex eius non esse?
+        Firmamız, 2023 yılında 3 ortak tarafından kurulmuş olup teknoloji,
+        mühendislik, üretim, lojistik ve hizmet sektörlerinde faaliyet
+        göstermektedir. İnşaat taahhüt, elektrik, mekanik ve mimari alanlarda
+        anahtar teslim projeler hazırlayıp, takip etmektedir. İnovasyon
+        süreçlerine büyük önem veren firmamız, bu süreçleri sürekli geliştirerek
+        genel stratejimize uyumlu hale getirmektedir. Aile şirketi olmanın
+        esnekliğini ve hızlı karar alma yeteneğini profesyonel iş anlayışıyla
+        birleştirerek, uzman ekibimizle kaliteli hizmet sunmayı ve Türkiye'nin
+        büyük şirketlerinden biri olmayı hedefliyoruz.
       </p>
       <img src="../assets/pic.jpg" alt="" />
     </div>
 
-    <div class="second">
+    <div class="second" data-aos="fade-up" ref="graph" data-aos-duration="800">
       <div class="section">
-        <div class="details">
-          <h2>500</h2>
-          <h3>PROJECTS</h3>
-        </div>
-        <div class="details">
-          <h2>500</h2>
-          <h3>PROJECTS</h3>
-        </div>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          class="px-0 py-0 d-flex justify-center align-center"
+          style="height: 200px"
+        >
+          <canvas id="passion"></canvas>
+        </v-col>
       </div>
 
       <div class="section">
-        <div class="details">
-          <h2>230</h2>
-          <h3>CONTRACTORS</h3>
-        </div>
-        <div class="details">
-          <h2>50</h2>
-          <h3>CLIENTS</h3>
-        </div>
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          class="px-0 py-0 d-flex justify-center align-center"
+          style="height: 200px"
+        >
+          <canvas id="experience"></canvas>
+        </v-col>
+      </div>
+      <div class="section">
+        <v-col
+          cols="12"
+          sm="12"
+          md="12"
+          class="px-0 py-0 d-flex justify-center align-center"
+          style="height: 200px"
+        >
+          <canvas id="success"></canvas>
+        </v-col>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import Chart from "chart.js/auto";
+import "animate.css";
+import { nextTick } from "vue";
+import AOS from "aos";
+export default {
+  mounted() {
+    let _this = this;
+
+    AOS.init();
+
+    nextTick(() => {
+      const target = this.$refs.graph;
+      if (target) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              _this.createChart("TUTKU", "passion");
+              _this.createChart("DENEYİM", "experience");
+              _this.createChart("BAŞARI", "success"); // Element görünür olduğunda bu fonksiyon çalışır
+              observer.unobserve(entry.target); // İsteğe bağlı: bir kez gözlemlendikten sonra gözlemeyi kaldır
+            }
+          });
+        });
+        observer.observe(target);
+      }
+    });
+  },
+  methods: {
+    createChart(text, elementId) {
+      const passion = document.getElementById(elementId);
+      new Chart(elementId, {
+        type: "doughnut",
+        data: {
+          datasets: [
+            {
+              data: [1],
+              backgroundColor: ["rgb(44, 62, 80)"],
+              borderColor: ["rgb(44, 62, 80)"], // Çerçevenin rengi siyah
+              borderWidth: 7,
+            },
+          ],
+        },
+        plugins: [
+          {
+            id: "text",
+            afterDraw: function (chart, a, b) {
+              let width = chart.width,
+                height = chart.height,
+                ctx = chart.ctx;
+
+              ctx.restore();
+
+              ctx.font = `bold 30px Segoe UI`;
+              ctx.weight = 700;
+              ctx.textBaseline = "middle";
+
+              let text = "%100",
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2.3;
+              ctx.fillStyle = "rgb(44, 62, 80)";
+              ctx.fillText(text, textX, textY);
+              ctx.save();
+            },
+          },
+        ],
+        options: {
+          maintainAspectRatio: false, // Genişlik ve yükseklik oranının korunmasını devre dışı bırakır
+          aspectRatio: 6,
+          plugins: {
+            title: {
+              display: true,
+              text: text,
+              font: {
+                size: 20, // Alt başlık yazı tipi boyutu,
+                weight: 700,
+                family: "Segoe UI",
+              },
+              color: "rgb(44, 62, 80)",
+              position: "bottom",
+            },
+          },
+
+          cutout: 65,
+          radius: 65,
+          events: [],
+        },
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -95,7 +202,7 @@ h2,
   width: 80%;
   justify-content: space-between;
   align-content: center;
-    color: #2C3E50;
+  color: #2c3e50;
 }
 
 .background-text {
@@ -127,7 +234,8 @@ h2,
   width: 40%;
   margin-top: 10%;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .second h2 {
@@ -165,36 +273,34 @@ h2,
     width: 90%;
     margin: auto auto;
   }
-  .second{
+  .second {
     width: 80%;
-      margin: auto auto;
+    margin: auto auto;
   }
   .first h3 {
     font-size: 40px;
     text-align: right;
     width: 100%;
-    
   }
   .first img {
     width: 90%;
   }
 
-.second{
-  margin-top: 50px;
-}
+  .second {
+    margin-top: 50px;
+  }
 
-.second h2 {
-  font-size: 60px;
-  font-weight: 700;
-  letter-spacing: 3px;
-}
+  .second h2 {
+    font-size: 60px;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
 
-.second h3 {
-  font-size: 13px;
+  .second h3 {
+    font-size: 13px;
 
-  font-weight: 400;
-  margin-top: -10px;
-}
-  
+    font-weight: 400;
+    margin-top: -10px;
+  }
 }
 </style> 

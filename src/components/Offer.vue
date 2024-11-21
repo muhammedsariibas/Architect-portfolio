@@ -2,56 +2,43 @@
   <div class="offer" data-aos="fade-up" data-aos-duration="600">
     <div class="header">
       <span class="line"></span>
-      <h3>WHAT I OFFER</h3>
+      <h3>NE SUNUYORUZ</h3>
     </div>
 
     <div class="offer-list">
       <div class="item">
         <div class="icon">
-          <i class="fa-solid fa-chart-column"></i>
+          <i class="fa-solid fas fa-handshake"></i>
         </div>
         <div>
-          <h4>All of our estimate</h4>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Architecto, magni!
+          <h4>MÜŞTERİ ODAKLI</h4>
+          <p >
+            Müşterilerimizin ihtiyaçlarını en iyi şekilde karşılamak için çalışıyoruz.
           </p>
         </div>
       </div>
       <div class="item">
         <div class="icon">
-          <i class="fa-solid fa-user-secret"></i>
+          <i class="fa-solid fas fa-lightbulb"></i>
         </div>
         <div>
-          <h4>All of our estimate</h4>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Architecto, magni!
+          <h4>İNOVASYON</h4>
+          <p >
+            Sıra Dışı Tasarımlar, Benzersiz Mekânlar: İnovasyonla Geleceği İnşa Ediyoruz
+          
           </p>
         </div>
       </div>
       <div class="item">
-        <div class="icon"><i class="fa-solid fa-gears"></i></div>
+        <div class="icon"><i class="fa-solid fas fa-hammer"></i></div>
         <div>
-          <h4>All of our estimate</h4>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Architecto, magni!
+          <h4>KALİTELİ İŞÇİLİK</h4>
+          <p >
+            İşçiliğimizle projeleri kusursuzca hayata geçiriyor, her detaya özen gösteriyoruz.  
           </p>
         </div>
       </div>
-      <div class="item">
-        <div class="icon">
-          <i class="fa-solid fa-arrows-to-circle"></i>
-        </div>
-        <div>
-          <h4>All of our estimate</h4>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Architecto, magni!
-          </p>
-        </div>
-      </div>
+     
     </div>
   </div>
 </template>
@@ -105,12 +92,12 @@ export default {};
 
 .item h4 {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: bold;
   padding-bottom: 10px;
 }
 .item p {
   font-size: 13px;
-  font-weight: lighter;
+  font-weight: bold;
 }
 
 .icon {

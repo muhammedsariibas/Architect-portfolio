@@ -1,32 +1,24 @@
 <template>
   <div class="general" data-aos="zoom-in" data-aos-duration="1000">
-    <h2>CONTACT</h2>
+    <h2>İletişim</h2>
 
     <div class="contact">
       <div class="text">
-        <h3>Have a Question?</h3>
-        <p>Just ask us,we're always</p>
-        <p>happy to answer</p>
+        <h3>Sorunuz mu var?</h3>
+        <p>Bize sorun, biz her zaman</p>
+        <p>cevaplamaktan mutluluk duyarız</p>
       </div>
       <div class="inner-form">
-        <form action="">
-          <div class="first">
-            <div>
-              <label for="name">Your Name</label>
-              <input type="text" />
-            </div>
-
-            <div>
-              <label for="name">Your Email</label>
-              <input type="text" />
-            </div>
-          </div>
-
-          <div>
-            <label for="name">Your Message</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-          </div>
-        </form>
+        <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.0082149122422!2d28.812431576221336!3d41.02507621838999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa5b3eb863a73%3A0xd315a7ae7499525c!2sKD%20Dizayn%20ve%20Mimarl%C4%B1k!5e0!3m2!1str!2str!4v1692175725697!5m2!1str!2str"
+        width="100%"
+        height="450"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+      G Plus, Bağlar mahallesi Mimarsinan Caddesi NO:37/1 İç Kapı:211, A Blok, 34209 Bağcılar/İstanbul
       </div>
     </div>
   </div>
@@ -35,7 +27,7 @@
 <script>
 export default {
   mounted() {
-    AOS.init();
+    // AOS.init();
   },
 };
 </script>

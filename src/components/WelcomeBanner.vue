@@ -2,19 +2,26 @@
   <div class="banner">
     <div class="overlay">
       <nav>
-        <div class="logo">LOGO</div>
+        <div class="logo">
+          <v-img
+            :width="100"
+            aspect-ratio="16/9"
+            cover
+            src="/logo/kdpng.png"
+          ></v-img>
+        </div>
         <ul>
-          <li>About</li>
-          <li>Portfolio</li>
-          <li>Contact</li>
+          <v-btn variant="text" href="#offer" >Hakkımızda</v-btn>
+          <v-btn variant="text" href="#portfolio">Projelerimiz</v-btn>
+          <v-btn variant="text" href="#contact  ">İletişim</v-btn>
         </ul>
       </nav>
 
       <div class="content">
         <div class="text">
-          <h4>Hello</h4>
-          <h1>I'M FOLA</h1>
-            <h4 class="tag">and I am an Architect</h4>
+          <h4>Merhaba</h4>
+          <h1>KD Dizayn</h1>
+          <h4 class="tag">geleceği inşa ediyoruz</h4>
         </div>
         <div class="side-rule"></div>
       </div>
@@ -58,11 +65,11 @@ nav {
   font-weight: 500;
 }
 
-.tag{
+.tag {
   text-align: right;
-  margin-top:10px;
+  margin-top: 10px;
   font-size: 26px !important;
-  margin-right: -100px;
+  margin-right: -150px;
 }
 nav ul {
   display: flex;
@@ -78,7 +85,7 @@ nav li {
 .overlay {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
-  animation: overlay 5s;
+  animation: overlay 3s;
 }
 
 @keyframes overlay {
@@ -100,7 +107,6 @@ nav li {
   background-position: 10% 80%;
   height: 100vh;
   animation: banner 1s;
-    
 }
 
 @keyframes banner {
@@ -164,12 +170,10 @@ nav li {
   }
 }
 
-
 .text h4 {
   font-size: 30px;
   padding-left: 10px;
   font-style: italic;
-
 }
 
 .text h1 {
@@ -227,12 +231,12 @@ nav li {
     font-weight: 700;
   }
 
-.tag{
-  text-align: right;
-  margin-top:5px;
-  font-size: 20px !important;
-  margin-right: -30px;
-}
+  .tag {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 20px !important;
+    margin-right: -30px;
+  }
   .text {
     position: absolute;
     line-height: 50px;
@@ -266,26 +270,26 @@ nav li {
     }
   }
 
-  .banner, .overlay{
+  .banner,
+  .overlay {
     height: 100vh;
     overflow-x: hidden;
-  
   }
 
   .bottom-bar {
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background-color: rgb(204, 204, 219);
-  height: 60px;
-  width: 70%;
-  animation: bar 2s forwards;
-  animation-delay: 5s;
-  bottom: -200px;
-  opacity: 0;
-}
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(204, 204, 219);
+    height: 60px;
+    width: 70%;
+    animation: bar 2s forwards;
+    animation-delay: 5s;
+    bottom: -200px;
+    opacity: 0;
+  }
 }
 </style>

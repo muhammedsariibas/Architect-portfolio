@@ -16,7 +16,18 @@ import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 
 
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
+// Components
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
 
 
 // importing AOS css style globally
@@ -25,5 +36,6 @@ import 'aos/dist/aos.css'
 const app = createApp(App)
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(router)
+app.use(vuetify)
 
 app.mount('#app')

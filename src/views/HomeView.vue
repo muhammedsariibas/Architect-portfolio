@@ -10,11 +10,21 @@ import Offer from '../components/Offer.vue';
 
 <template>
   <main>
-    <WelcomeBanner/>
-    <Offer/>
-    <About/>
-    <Portfolio/>
-    <Contact/>
+    <section id="welcome">
+      <WelcomeBanner/>
+    </section>
+    <section id="offer">
+      <Offer/>
+    </section>
+    <section id="about">
+      <About/>
+    </section>
+    <section id="portfolio">
+      <Portfolio/>
+    </section>
+    <section id="contact">
+      <Contact/>
+    </section>
     <Footer/>
   </main>
 </template>
