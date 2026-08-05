@@ -1,150 +1,138 @@
-<template >
-  <div class="about" data-aos="fade-up" data-aos-duration="600">
-    <h2 class="title-decorative">
-      <span class="title-decorative-letter">HAKKIMIZDA</span>
-    </h2>
+<script setup>
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+</script>
 
-    <div class="first">
-      <h3>Hakkımızda</h3>
-      <p>
-        Firmamız, 2023 yılında 3 ortak tarafından kurulmuş olup teknoloji,
-        mühendislik, üretim, lojistik ve hizmet sektörlerinde faaliyet
-        göstermektedir. İnşaat taahhüt, elektrik, mekanik ve mimari alanlarda
-        anahtar teslim projeler hazırlayıp, takip etmektedir. İnovasyon
-        süreçlerine büyük önem veren firmamız, bu süreçleri sürekli geliştirerek
-        genel stratejimize uyumlu hale getirmektedir. Aile şirketi olmanın
-        esnekliğini ve hızlı karar alma yeteneğini profesyonel iş anlayışıyla
-        birleştirerek, uzman ekibimizle kaliteli hizmet sunmayı ve Türkiye'nin
-        büyük şirketlerinden biri olmayı hedefliyoruz.
-      </p>
-      <img src="../assets/pic.jpg" alt="" />
-    </div>
+<template>
+  <div class="about-section">
+    <div class="container">
 
-    <div class="second" data-aos="fade-up" ref="graph" data-aos-duration="800">
-      <div class="section">
-        <v-col
-          cols="12"
-          sm="12"
-          md="12"
-          class="px-0 py-0 d-flex justify-center align-center"
-          style="height: 200px"
-        >
-          <canvas id="passion"></canvas>
-        </v-col>
+      <div class="section-header" data-aos="fade-up" data-aos-duration="600">
+        <span class="section-eyebrow">{{ t('about.eyebrow') }}</span>
+        <h2 class="section-title">{{ t('about.title') }}</h2>
+        <div class="divider"></div>
       </div>
 
-      <div class="section">
-        <v-col
-          cols="12"
-          sm="12"
-          md="12"
-          class="px-0 py-0 d-flex justify-center align-center"
-          style="height: 200px"
-        >
-          <canvas id="experience"></canvas>
-        </v-col>
+      <div class="about-grid" data-aos="fade-up" data-aos-duration="700">
+        <div class="about-text">
+          <p>{{ t('about.p1') }}</p>
+          <p>{{ t('about.p2') }}</p>
+
+          <div class="stats-row">
+            <div class="stat">
+              <span class="stat-num">2023</span>
+              <span class="stat-label">{{ t('about.stat1_label') }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">4+</span>
+              <span class="stat-label">{{ t('about.stat2_label') }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">3</span>
+              <span class="stat-label">{{ t('about.stat3_label') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-img-wrap" data-aos="fade-left" data-aos-duration="700">
+          <img src="../assets/pic.jpg" alt="KD Dizayn Ofis" />
+        </div>
       </div>
-      <div class="section">
-        <v-col
-          cols="12"
-          sm="12"
-          md="12"
-          class="px-0 py-0 d-flex justify-center align-center"
-          style="height: 200px"
-        >
-          <canvas id="success"></canvas>
-        </v-col>
+
+      <!-- Charts -->
+      <div class="chart-row" ref="graphRef" data-aos="fade-up" data-aos-duration="800">
+        <div class="chart-card">
+          <div class="chart-item">
+            <canvas id="passion"></canvas>
+          </div>
+          <p class="chart-label">{{ t('about.chart1') }}</p>
+        </div>
+        <div class="chart-card">
+          <div class="chart-item">
+            <canvas id="experience"></canvas>
+          </div>
+          <p class="chart-label">{{ t('about.chart2') }}</p>
+        </div>
+        <div class="chart-card">
+          <div class="chart-item">
+            <canvas id="success"></canvas>
+          </div>
+          <p class="chart-label">{{ t('about.chart3') }}</p>
+        </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
 import Chart from "chart.js/auto";
-import "animate.css";
 import { nextTick } from "vue";
 import AOS from "aos";
+
 export default {
   mounted() {
-    let _this = this;
-
     AOS.init();
-
     nextTick(() => {
-      const target = this.$refs.graph;
+      const target = this.$refs.graphRef;
       if (target) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              _this.createChart("TUTKU", "passion");
-              _this.createChart("DENEYİM", "experience");
-              _this.createChart("BAŞARI", "success"); // Element görünür olduğunda bu fonksiyon çalışır
-              observer.unobserve(entry.target); // İsteğe bağlı: bir kez gözlemlendikten sonra gözlemeyi kaldır
-            }
-          });
-        });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                this.createChart("passion");
+                this.createChart("experience");
+                this.createChart("success");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.2 }
+        );
         observer.observe(target);
       }
     });
   },
   methods: {
-    createChart(text, elementId) {
-      const passion = document.getElementById(elementId);
+    createChart(elementId) {
       new Chart(elementId, {
         type: "doughnut",
         data: {
           datasets: [
             {
               data: [1],
-              backgroundColor: ["rgb(44, 62, 80)"],
-              borderColor: ["rgb(44, 62, 80)"], // Çerçevenin rengi siyah
-              borderWidth: 7,
+              backgroundColor: ["#c9a84c"],
+              borderColor: ["#c9a84c"],
+              borderWidth: 5,
             },
           ],
         },
         plugins: [
           {
-            id: "text",
-            afterDraw: function (chart, a, b) {
-              let width = chart.width,
-                height = chart.height,
-                ctx = chart.ctx;
-
-              ctx.restore();
-
-              ctx.font = `bold 30px Segoe UI`;
-              ctx.weight = 700;
-              ctx.textBaseline = "middle";
-
-              let text = "%100",
-                textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = height / 2.3;
-              ctx.fillStyle = "rgb(44, 62, 80)";
-              ctx.fillText(text, textX, textY);
+            id: "centerText",
+            afterDraw(chart) {
+              const { chartArea, ctx } = chart;
+              if (!chartArea) return;
               ctx.save();
+              ctx.font = "bold 18px Inter, sans-serif";
+              ctx.textBaseline = "middle";
+              ctx.textAlign = "center";
+              ctx.fillStyle = "#1a1a2e";
+              const centerX = (chartArea.left + chartArea.right) / 2;
+              const centerY = (chartArea.top + chartArea.bottom) / 2;
+              ctx.fillText("%100", centerX, centerY);
+              ctx.restore();
             },
           },
         ],
         options: {
-          maintainAspectRatio: false, // Genişlik ve yükseklik oranının korunmasını devre dışı bırakır
-          aspectRatio: 6,
-          plugins: {
-            title: {
-              display: true,
-              text: text,
-              font: {
-                size: 20, // Alt başlık yazı tipi boyutu,
-                weight: 700,
-                family: "Segoe UI",
-              },
-              color: "rgb(44, 62, 80)",
-              position: "bottom",
-            },
-          },
-
-          cutout: 65,
-          radius: 65,
+          maintainAspectRatio: true,
+          aspectRatio: 1,
+          cutout: "65%",
           events: [],
+          plugins: {
+            title: { display: false },
+          },
         },
       });
     },
@@ -153,154 +141,166 @@ export default {
 </script>
 
 <style scoped>
-/* element.style {
-  visibility: visible;
-  animation-delay: 0s;
-}
-.animated {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  opacity: 1;
+.about-section {
+  padding: 120px 0;
+  background: var(--bg-white);
 }
 
-.title-decorative-2 {
-  line-height: 1.3em;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.section-header {
+  margin-bottom: 64px;
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-size: 12px;
   font-weight: 700;
-  color: #efeff0;
-  font-size: 200px;
-  text-align: left;
-  display: block;
-} */
-
-.title-decorative {
-  padding-top: 50px;
-}
-h2,
-.heading-2 {
-  font-size: 80px;
-}
-
-.title-decorative-letter {
-  position: absolute;
-  left: 0.5em;
-  top: -70px;
-  font-size: 210px;
-  line-height: 1;
-  -webkit-text-stroke: 0.7px rgba(15, 15, 18, 0.2);
-  color: transparent;
-}
-.title-decorative {
-  position: relative;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
 }
 
-.about {
-  display: flex;
-  margin: auto;
-  margin-top: 10%;
-  padding-bottom: 10%;
-  width: 80%;
-  justify-content: space-between;
-  align-content: center;
-  color: #2c3e50;
-}
-
-.background-text {
-  font-size: 100px;
-  z-index: 1;
-}
-
-.first {
-  width: 40%;
-  margin-top: 3%;
-  z-index: 100;
-}
-
-.first img {
-  margin-top: 30px;
-  width: 450px;
-}
-.first p {
-  margin-top: 30px;
-  font-size: 14px;
-}
-
-.first h3 {
-  font-size: 55px;
-  text-align: right;
-}
-
-.second {
-  width: 40%;
-  margin-top: 10%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.second h2 {
-  font-size: 80px;
+.section-title {
+  font-size: clamp(32px, 4vw, 52px);
   font-weight: 700;
-  letter-spacing: 5px;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
 }
 
-.second h3 {
-  font-size: 20px;
+.divider {
+  width: 56px;
+  height: 3px;
+  background: var(--accent);
+  margin-top: 20px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+.about-text p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.9;
+  margin-bottom: 18px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
   font-weight: 600;
-  margin-top: -15px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-light);
 }
 
-.details {
-  padding-bottom: 70px;
+.about-img-wrap {
+  overflow: hidden;
 }
 
-@media screen and (max-width: 420px) {
-  .about {
-    display: block;
-    width: 100%;
-    margin-top: 100px;
-    overflow-x: hidden;
-  }
-
-  .title-decorative-letter {
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 120px;
-  }
-
-  .first {
-    width: 90%;
-    margin: auto auto;
-  }
-  .second {
-    width: 80%;
-    margin: auto auto;
-  }
-  .first h3 {
-    font-size: 40px;
-    text-align: right;
-    width: 100%;
-  }
-  .first img {
-    width: 90%;
-  }
-
-  .second {
-    margin-top: 50px;
-  }
-
-  .second h2 {
-    font-size: 60px;
-    font-weight: 700;
-    letter-spacing: 3px;
-  }
-
-  .second h3 {
-    font-size: 13px;
-
-    font-weight: 400;
-    margin-top: -10px;
-  }
+.about-img-wrap img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  display: block;
 }
-</style> 
+
+/* Charts */
+.chart-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.chart-card {
+  background: transparent;
+  padding: 8px 24px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-item {
+  width: 100%;
+  max-width: 180px;
+}
+
+.chart-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  margin-top: 16px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .about-section { padding: 80px 0; }
+  .container { padding: 0 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 56px; }
+  .about-img-wrap img { height: 300px; }
+  .chart-row { gap: 20px; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .about-section { padding: 64px 0; }
+  .container { padding: 0 18px; }
+  .section-header { margin-bottom: 40px; }
+  .about-grid { gap: 32px; margin-bottom: 48px; }
+  .about-text p { font-size: 14px; }
+  .stats-row { gap: 16px; margin-top: 36px; padding-top: 28px; }
+  .stat-num { font-size: 26px; }
+  .stat-label { font-size: 10px; }
+  .about-img-wrap img { height: 220px; }
+
+  .chart-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
+  .chart-card { padding: 24px 20px 16px; }
+  .chart-item { max-width: 160px; }
+}
+
+@media (max-width: 400px) {
+  .stat-num { font-size: 22px; }
+  .stats-row { gap: 10px; }
+}
+</style>

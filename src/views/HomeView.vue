@@ -1,36 +1,35 @@
 <script setup>
-import TheWelcome from '@/components/TheWelcome.vue'
-import WelcomeBanner from '@/components/WelcomeBanner.vue'
-import About from '../components/About.vue';
-import Portfolio from '../components/Portfolio.vue';
-import Contact from '../components/Contact.vue';
-import Footer from '../components/Footer.vue';
-import Offer from '../components/Offer.vue';
+import WelcomeBanner from '@/components/WelcomeBanner.vue';
+import About from '@/components/About.vue';
+import Portfolio from '@/components/Portfolio.vue';
+import Contact from '@/components/Contact.vue';
+import Footer from '@/components/Footer.vue';
+import Offer from '@/components/Offer.vue';
 </script>
 
 <template>
   <main>
     <section id="welcome">
-      <WelcomeBanner/>
+      <WelcomeBanner />
     </section>
     <section id="offer">
-      <Offer/>
+      <Offer />
     </section>
     <section id="about">
-      <About/>
+      <About />
     </section>
     <section id="portfolio">
-      <Portfolio/>
+      <Portfolio />
     </section>
     <section id="contact">
-      <Contact/>
+      <Contact />
     </section>
-    <Footer/>
+    <Footer />
   </main>
 </template>
 
 <style scoped>
-main{
-  background-color: rgb(220, 220, 228);
+main {
+  background: var(--bg-white);
 }
 </style>

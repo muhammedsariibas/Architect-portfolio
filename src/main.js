@@ -33,9 +33,12 @@ const vuetify = createVuetify({
 // importing AOS css style globally
 import 'aos/dist/aos.css'
 
+import i18n from './i18n'
+
 const app = createApp(App)
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(router)
 app.use(vuetify)
+app.use(i18n)
 
 app.mount('#app')
