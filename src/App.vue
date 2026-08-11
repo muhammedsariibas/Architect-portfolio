@@ -1,12 +1,16 @@
 <script setup>
-import { RouterView } from "vue-router";
-import { ref, onMounted, onUnmounted } from "vue";
+import { RouterView, useRoute } from "vue-router";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t, locale } = useI18n();
+const route = useRoute();
 
-const scrolled = ref(false);
-const menuOpen = ref(false);
+// Navbar'ı admin sayfalarında gösterme
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
+
+const scrolled  = ref(false);
+const menuOpen  = ref(false);
 
 function handleScroll() {
   scrolled.value = window.scrollY > 60;
@@ -31,8 +35,8 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 </script>
 
 <template>
-  <!-- Navbar -->
-  <header :class="['navbar', { scrolled: scrolled }]">
+  <!-- Navbar — public site only -->
+  <header v-if="!isAdminRoute" :class="['navbar', { scrolled: scrolled }]">
     <div class="navbar-inner">
       <a href="#welcome" class="navbar-logo">
         <img src="/logo/kdpng.png" alt="KD Dizayn" />
@@ -82,8 +86,9 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
   <RouterView />
 
-  <!-- WhatsApp FAB -->
+  <!-- WhatsApp FAB — public site only -->
   <a
+    v-if="!isAdminRoute"
     href="https://api.whatsapp.com/send?phone=905356988457"
     class="whatsapp-fab"
     target="_blank"
