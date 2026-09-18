@@ -11,7 +11,7 @@ const { t } = useI18n();
         <h1 class="hero-title">{{ t('hero.title') }}</h1>
         <p class="hero-subtitle">{{ t('hero.subtitle') }}</p>
         <div class="hero-actions">
-          <a href="#portfolio" class="btn-primary">{{ t('hero.cta_projects') }}</a>
+        <a href="#portfolio" class="btn-primary">{{ t('hero.cta_projects') }}</a>
           <a href="#contact" class="btn-ghost">{{ t('hero.cta_contact') }}</a>
         </div>
       </div>
@@ -47,7 +47,7 @@ const { t } = useI18n();
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0 10%;
+  padding: 0 8% 0 7%;
   animation: fadeIn 1.2s ease forwards;
 }
 
@@ -57,7 +57,12 @@ const { t } = useI18n();
 }
 
 .hero-content {
-  max-width: 680px;
+  max-width: 760px;
+  width: min(100%, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
   animation: slideUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
 }
 
@@ -69,28 +74,29 @@ const { t } = useI18n();
 .hero-eyebrow {
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 20px;
+  margin: 0 0 18px;
 }
 
 .hero-title {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(56px, 9vw, 110px);
+  font-size: clamp(4rem, 6vw, 7.5rem);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1;
-  margin-bottom: 20px;
-  letter-spacing: -0.02em;
+  line-height: 0.88;
+  margin: 0 0 18px;
+  letter-spacing: -0.06em;
+  max-width: 700px;
 }
 
 .hero-subtitle {
-  font-size: clamp(16px, 2vw, 22px);
+  font-size: clamp(1.2rem, 1.9vw, 2rem);
   color: rgba(255, 255, 255, 0.75);
   font-style: italic;
   font-weight: 300;
-  margin-bottom: 48px;
+  margin: 0 0 42px;
   letter-spacing: 0.02em;
 }
 
@@ -98,6 +104,7 @@ const { t } = useI18n();
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  margin-top: 8px;
 }
 
 .btn-primary {
@@ -169,6 +176,12 @@ const { t } = useI18n();
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
+}
+
+@media (min-width: 1200px) {
+  .hero-content {
+    margin-top: 2rem;
+  }
 }
 
 @media (max-width: 768px) {

@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import com.kddizayn.api.module.project.Project;
 
 @Entity
 @Table(name = "media")
@@ -30,6 +31,10 @@ public class Media {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MediaCategory category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

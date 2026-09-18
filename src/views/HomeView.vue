@@ -5,6 +5,7 @@ import Portfolio from '@/components/Portfolio.vue';
 import Contact from '@/components/Contact.vue';
 import Footer from '@/components/Footer.vue';
 import Offer from '@/components/Offer.vue';
+import Faq from '@/components/Faq.vue';
 </script>
 
 <template>
@@ -21,6 +22,7 @@ import Offer from '@/components/Offer.vue';
     <section id="portfolio">
       <Portfolio />
     </section>
+    <Faq />
     <section id="contact">
       <Contact />
     </section>

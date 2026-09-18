@@ -2,6 +2,7 @@
 import { RouterView, useRoute } from "vue-router";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { getAllMedia } from '@/api/media';
 
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -11,6 +12,7 @@ const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
 const scrolled  = ref(false);
 const menuOpen  = ref(false);
+const logoUrl = ref('/logo/kdpng.png');
 
 function handleScroll() {
   scrolled.value = window.scrollY > 60;
@@ -26,12 +28,30 @@ function closeMenu() {
   document.body.style.overflow = "";
 }
 
-function toggleLang() {
-  locale.value = locale.value === "tr" ? "en" : "tr";
+function handleKeydown(event) {
+  if (event.key === 'Escape' && menuOpen.value) closeMenu()
 }
 
-onMounted(() => window.addEventListener("scroll", handleScroll));
-onUnmounted(() => window.removeEventListener("scroll", handleScroll));
+function toggleLang() {
+  locale.value = locale.value === "tr" ? "en" : "tr";
+  localStorage.setItem('site_locale', locale.value)
+  document.documentElement.lang = locale.value
+}
+
+onMounted(() => {
+  document.documentElement.lang = locale.value
+  window.addEventListener("scroll", handleScroll)
+  window.addEventListener("keydown", handleKeydown)
+  getAllMedia().then(({ data }) => {
+    const logo = data.find((item) => item.category === 'LOGO')
+    if (logo?.fileUrl) logoUrl.value = logo.fileUrl
+  }).catch(() => {})
+})
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll)
+  window.removeEventListener("keydown", handleKeydown)
+  document.body.style.overflow = ''
+})
 </script>
 
 <template>
@@ -39,12 +59,12 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
   <header v-if="!isAdminRoute" :class="['navbar', { scrolled: scrolled }]">
     <div class="navbar-inner">
       <a href="#welcome" class="navbar-logo">
-        <img src="/logo/kdpng.png" alt="KD Dizayn" />
+        <img :src="logoUrl" alt="KD Dizayn" />
       </a>
 
-      <nav class="navbar-links" :class="{ open: menuOpen }">
+      <nav id="site-navigation" class="navbar-links" :class="{ open: menuOpen }" :aria-hidden="!menuOpen">
         <!-- Close button -->
-        <button class="drawer-close" @click="closeMenu" aria-label="Menüyü kapat">
+        <button class="drawer-close" @click="closeMenu" aria-label="Menüyü kapat" type="button">
           <span></span>
           <span></span>
         </button>
@@ -53,11 +73,12 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
           <a href="#offer" @click="closeMenu">{{ t('nav.services') }}</a>
           <a href="#about" @click="closeMenu">{{ t('nav.about') }}</a>
           <a href="#portfolio" @click="closeMenu">{{ t('nav.portfolio') }}</a>
+          <a href="#faq" @click="closeMenu">{{ t('nav.faq') }}</a>
           <a href="#contact" @click="closeMenu">{{ t('nav.contact') }}</a>
         </div>
 
         <!-- Lang toggle inside mobile menu -->
-        <button class="lang-toggle mobile-lang" @click="toggleLang" :aria-label="locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'">
+        <button class="lang-toggle mobile-lang" @click="toggleLang" type="button" :aria-label="locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'">
           <span :class="{ active: locale === 'tr' }">TR</span>
           <span class="lang-sep">/</span>
           <span :class="{ active: locale === 'en' }">EN</span>
@@ -69,13 +90,13 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
       <div class="navbar-right">
         <!-- Lang toggle desktop -->
-        <button class="lang-toggle desktop-lang" @click="toggleLang" :aria-label="locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'">
+        <button class="lang-toggle desktop-lang" @click="toggleLang" type="button" :aria-label="locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'">
           <span :class="{ active: locale === 'tr' }">TR</span>
           <span class="lang-sep">/</span>
           <span :class="{ active: locale === 'en' }">EN</span>
         </button>
 
-        <button class="hamburger" @click="toggleMenu" :class="{ active: menuOpen }" aria-label="Menü">
+        <button class="hamburger" @click="toggleMenu" :class="{ active: menuOpen }" :aria-expanded="menuOpen" aria-controls="site-navigation" aria-label="Menü" type="button">
           <span></span>
           <span></span>
           <span></span>
@@ -140,17 +161,34 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
 .navbar-links {
   display: flex;
-  gap: 40px;
   align-items: center;
 }
 
+.drawer-close {
+  display: none;
+}
+
+.drawer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .navbar-links a {
+  display: inline-flex;
+  align-items: center;
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  padding: 10px 15px;
+  border-radius: 999px;
   transition: var(--transition);
   position: relative;
 }
@@ -168,6 +206,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
 .navbar-links a:hover {
   color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .navbar-links a:hover::after {
@@ -353,6 +392,10 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
     align-items: center;
     gap: 8px;
     width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
   }
 
   .drawer-links a {

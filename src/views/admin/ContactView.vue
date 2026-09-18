@@ -44,11 +44,11 @@ async function handleSave() {
     <div class="contact-page">
       <h2 class="page-title">İletişim Bilgileri</h2>
 
-      <div v-if="success" class="alert success">
+      <div v-if="success" class="alert success" role="status" aria-live="polite">
         <i class="fa-solid fa-circle-check"></i> {{ success }}
         <button @click="success = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div v-if="error" class="alert error">
+      <div v-if="error" class="alert error" role="alert" aria-live="assertive">
         <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
         <button @click="error = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -61,36 +61,36 @@ async function handleSave() {
         <form @submit.prevent="handleSave" class="contact-form">
           <div class="form-grid">
             <div class="field">
-              <label>Telefon *</label>
-              <input v-model="form.phone" type="text" placeholder="+90 535 000 00 00" required />
+              <label for="contact-phone">Telefon *</label>
+              <input id="contact-phone" v-model="form.phone" type="text" placeholder="+90 535 000 00 00" required />
             </div>
             <div class="field">
-              <label>E-posta *</label>
-              <input v-model="form.email" type="email" placeholder="info@kddizayn.com" required />
+              <label for="contact-email">E-posta *</label>
+              <input id="contact-email" v-model="form.email" type="email" placeholder="info@kddizayn.com" required />
             </div>
             <div class="field full">
-              <label>Adres *</label>
-              <textarea v-model="form.address" rows="2" placeholder="Tam adres..." required></textarea>
+              <label for="contact-address">Adres *</label>
+              <textarea id="contact-address" v-model="form.address" rows="2" placeholder="Tam adres..." required></textarea>
             </div>
             <div class="field full">
-              <label>Google Maps URL</label>
-              <input v-model="form.googleMapsUrl" type="url" placeholder="https://maps.google.com/..." />
+              <label for="contact-map">Google Maps URL</label>
+              <input id="contact-map" v-model="form.googleMapsUrl" type="url" placeholder="https://maps.google.com/..." />
             </div>
             <div class="field">
-              <label>Instagram URL</label>
-              <input v-model="form.instagramUrl" type="url" placeholder="https://instagram.com/..." />
+              <label for="contact-instagram">Instagram URL</label>
+              <input id="contact-instagram" v-model="form.instagramUrl" type="url" placeholder="https://instagram.com/..." />
             </div>
             <div class="field">
-              <label>LinkedIn URL</label>
-              <input v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/..." />
+              <label for="contact-linkedin">LinkedIn URL</label>
+              <input id="contact-linkedin" v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/..." />
             </div>
             <div class="field">
-              <label>Facebook URL</label>
-              <input v-model="form.facebookUrl" type="url" placeholder="https://facebook.com/..." />
+              <label for="contact-facebook">Facebook URL</label>
+              <input id="contact-facebook" v-model="form.facebookUrl" type="url" placeholder="https://facebook.com/..." />
             </div>
             <div class="field">
-              <label>Çalışma Saatleri</label>
-              <input v-model="form.workingHours" type="text" placeholder="Pzt–Cum: 09:00–18:00" />
+              <label for="contact-hours">Çalışma Saatleri</label>
+              <input id="contact-hours" v-model="form.workingHours" type="text" placeholder="Pzt–Cum: 09:00–18:00" />
             </div>
           </div>
 

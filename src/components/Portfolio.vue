@@ -19,16 +19,21 @@ const { t } = useI18n();
           data-aos="fade-up"
           :data-aos-delay="i * 100"
           @click="openGallery(project.items)"
+          @keydown.enter.prevent="openGallery(project.items)"
+          @keydown.space.prevent="openGallery(project.items)"
+          tabindex="0"
+          role="button"
         >
           <div class="card-img-wrap">
-            <img :src="project.cover" :alt="project.title" />
+            <img :src="project.cover" :alt="project.title" loading="lazy" decoding="async" />
             <div class="card-overlay">
               <i class="fa-solid fa-magnifying-glass-plus"></i>
             </div>
           </div>
           <div class="card-info">
             <h3>{{ project.title }}</h3>
-            <span class="card-tag">{{ t(project.tagKey) }}</span>
+            <span class="card-tag">{{ project.tagLabel || t(project.tagKey) }}</span>
+            <p v-if="project.description" class="card-description">{{ project.description }}</p>
           </div>
         </div>
       </div>
@@ -39,6 +44,9 @@ const { t } = useI18n();
       <div
         v-if="dialog"
         class="lightbox"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="activeItems[activeIndex]?.header || 'Project gallery'"
         @click.self="dialog = false"
         @touchstart="onTouchStart"
         @touchend="onTouchEnd"
@@ -50,7 +58,7 @@ const { t } = useI18n();
           <i class="fa-solid fa-arrow-left"></i>
         </button>
         <div class="lb-img-wrap">
-          <img :src="activeItems[activeIndex].img" :alt="activeItems[activeIndex].header" />
+          <img :src="activeItems[activeIndex].img" :alt="activeItems[activeIndex].header" decoding="async" />
           <p class="lb-caption">{{ activeItems[activeIndex].header }} — {{ activeIndex + 1 }} / {{ activeItems.length }}</p>
         </div>
         <button class="lb-arrow lb-next" @click="next" aria-label="Sonraki">
@@ -63,11 +71,27 @@ const { t } = useI18n();
 
 <script>
 import AOS from "aos";
+import { getPublicProjects } from "@/api/projects";
 
 export default {
-  mounted() {
+  async mounted() {
     AOS.init();
     window.addEventListener("keydown", this.handleKey);
+    try {
+      const { data } = await getPublicProjects();
+      const apiProjects = data.filter((project) => project.images?.length).map((project) => ({
+          key: `project-${project.id}`,
+          title: project.title,
+          description: project.description,
+          tagKey: "portfolio.tag_interior",
+          tagLabel: project.category,
+          cover: project.images[0].fileUrl,
+          items: project.images.map((item) => ({ header: project.title, img: item.fileUrl })),
+        }));
+      if (apiProjects.length) this.projects = apiProjects;
+    } catch {
+      // The bundled portfolio remains available while the API is offline.
+    }
   },
   beforeUnmount() {
     window.removeEventListener("keydown", this.handleKey);
@@ -219,6 +243,8 @@ export default {
   transition: var(--transition);
 }
 
+.portfolio-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+
 .portfolio-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
@@ -283,6 +309,8 @@ export default {
   color: var(--text-dark);
   letter-spacing: -0.01em;
 }
+
+.card-description { width: 100%; margin: 4px 0 0; color: var(--text-mid); font-size: 14px; line-height: 1.6; }
 
 .card-tag {
   font-size: 11px;

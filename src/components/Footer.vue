@@ -1,6 +1,13 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { getContact } from "@/api/contact";
+import { getAllMedia } from "@/api/media";
 const { t } = useI18n();
+const contact = ref({ phone: '+90 535 698 84 57', email: 'info@kddizayn.com', instagramUrl: '', linkedinUrl: '', facebookUrl: '' });
+const logoUrl = ref('/logo/kdpng.png');
+onMounted(async () => { try { contact.value = { ...contact.value, ...(await getContact()).data }; } catch { /* fallback contact data remains visible */ } });
+onMounted(async () => { try { const logo = (await getAllMedia()).data.find((item) => item.category === 'LOGO'); if (logo?.fileUrl) logoUrl.value = logo.fileUrl; } catch { /* bundled logo remains visible */ } });
 </script>
 
 <template>
@@ -8,7 +15,7 @@ const { t } = useI18n();
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/logo/kdpng.png" alt="KD Dizayn" class="footer-logo" />
+          <img :src="logoUrl" alt="KD Dizayn" class="footer-logo" />
           <p>{{ t('footer.tagline') }}</p>
         </div>
 
@@ -18,24 +25,28 @@ const { t } = useI18n();
             <li><a href="#offer">{{ t('nav.services') }}</a></li>
             <li><a href="#about">{{ t('nav.about') }}</a></li>
             <li><a href="#portfolio">{{ t('nav.portfolio') }}</a></li>
+            <li><a href="#faq">{{ t('nav.faq') }}</a></li>
             <li><a href="#contact">{{ t('nav.contact') }}</a></li>
           </ul>
         </div>
 
         <div class="footer-contact">
           <h4>{{ t('footer.contact_title') }}</h4>
-          <p><a href="tel:+905356988457">+90 535 698 84 57</a></p>
-          <p><a href="mailto:info@kddizayn.com">info@kddizayn.com</a></p>
+          <p><a :href="`tel:${contact.phone.replace(/\s/g, '')}`">{{ contact.phone }}</a></p>
+          <p><a :href="`mailto:${contact.email}`">{{ contact.email }}</a></p>
         </div>
 
         <div class="footer-social">
           <h4>{{ t('footer.social_title') }}</h4>
           <div class="social-links">
-            <a href="https://www.instagram.com/kddizaynmimarlik/" target="_blank" rel="noopener" aria-label="Instagram">
+            <a v-if="contact.instagramUrl" :href="contact.instagramUrl" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="https://www.linkedin.com/company/kddi%CC%87zaynmi%CC%87marlik/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <a v-if="contact.linkedinUrl" :href="contact.linkedinUrl" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <i class="fa-brands fa-linkedin"></i>
+            </a>
+            <a v-if="contact.facebookUrl" :href="contact.facebookUrl" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <i class="fa-brands fa-facebook"></i>
             </a>
           </div>
         </div>

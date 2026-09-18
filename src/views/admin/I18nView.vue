@@ -59,11 +59,11 @@ async function save(msg) {
     <div class="i18n-page">
       <h2 class="page-title">Metin Yönetimi (i18n)</h2>
 
-      <div v-if="success" class="alert success">
+      <div v-if="success" class="alert success" role="status" aria-live="polite">
         <i class="fa-solid fa-circle-check"></i> {{ success }}
         <button @click="success = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div v-if="error" class="alert error">
+      <div v-if="error" class="alert error" role="alert" aria-live="assertive">
         <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
         <button @click="error = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>

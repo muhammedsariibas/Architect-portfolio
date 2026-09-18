@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -66,8 +67,6 @@ public class DataInitializer implements CommandLineRunner {
     // ── i18n seed data ────────────────────────────────────────────────────────
 
     private void seedI18n() {
-        if (i18nRepository.count() > 0) return;
-
         List<I18nMessage> messages = List.of(
             // ── Turkish ──
             msg("nav.services",        "tr", "Hizmetler"),
@@ -92,6 +91,7 @@ public class DataInitializer implements CommandLineRunner {
             msg("about.p1",            "tr", "Firmamız, 2023 yılında 3 ortak tarafından kurulmuş olup teknoloji, mühendislik, üretim, lojistik ve hizmet sektörlerinde faaliyet göstermektedir."),
             msg("about.p2",            "tr", "İnovasyon süreçlerine büyük önem veren firmamız, aile şirketi olmanın esnekliğini profesyonel iş anlayışıyla birleştirerek uzman ekibiyle kaliteli hizmet sunmayı hedeflemektedir."),
             msg("about.stat1_label",   "tr", "Kuruluş Yılı"),
+            msg("about.stat2_value",   "tr", "4+"),
             msg("about.stat2_label",   "tr", "Tamamlanan Proje"),
             msg("about.stat3_label",   "tr", "Kurucu Ortak"),
             msg("about.chart1",        "tr", "TUTKU"),
@@ -137,6 +137,7 @@ public class DataInitializer implements CommandLineRunner {
             msg("about.p1",            "en", "Our company was founded in 2023 by 3 partners and operates in the technology, engineering, manufacturing, logistics and services sectors."),
             msg("about.p2",            "en", "Our company, which places great importance on innovation processes, aims to provide quality services with its expert team by combining the flexibility of a family business with a professional approach."),
             msg("about.stat1_label",   "en", "Founded"),
+            msg("about.stat2_value",   "en", "4+"),
             msg("about.stat2_label",   "en", "Completed Projects"),
             msg("about.stat3_label",   "en", "Founding Partners"),
             msg("about.chart1",        "en", "PASSION"),
@@ -160,8 +161,14 @@ public class DataInitializer implements CommandLineRunner {
             msg("footer.rights",       "en", "All rights reserved.")
         );
 
-        i18nRepository.saveAll(messages);
-        log.info("i18n seed data inserted ({} messages)", messages.size());
+        List<I18nMessage> missingMessages = messages.stream()
+                .filter(message -> !i18nRepository.existsByKeyAndLocale(message.getKey(), message.getLocale()))
+                .collect(Collectors.toList());
+
+        if (!missingMessages.isEmpty()) {
+            i18nRepository.saveAll(missingMessages);
+            log.info("i18n seed data inserted ({} missing messages)", missingMessages.size());
+        }
     }
 
     private I18nMessage msg(String key, String locale, String content) {

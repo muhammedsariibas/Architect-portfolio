@@ -49,8 +49,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 // Public GET endpoints
                 .requestMatchers(HttpMethod.GET, "/api/v1/media/public/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/projects/public").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/i18n/public/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/contact/public").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/contact/message").permitAll()
                 // Static uploaded files
                 .requestMatchers("/uploads/**").permitAll()
                 // Admin endpoints — ROLE_ADMIN only

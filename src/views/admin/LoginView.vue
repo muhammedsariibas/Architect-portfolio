@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const router   = useRouter()
+const route    = useRoute()
 const auth     = useAuthStore()
 
 const username = ref('')
@@ -20,7 +21,7 @@ async function handleLogin() {
   error.value   = ''
   try {
     await auth.login(username.value, password.value)
-    router.push('/admin')
+    router.push(typeof route.query.redirect === 'string' ? route.query.redirect : '/admin')
   } catch (e) {
     error.value = e.response?.data?.message || 'Kullanıcı adı veya şifre hatalı.'
   } finally {
@@ -40,8 +41,9 @@ async function handleLogin() {
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="field">
-          <label>Kullanıcı Adı</label>
+          <label for="admin-username">Kullanıcı Adı</label>
           <input
+            id="admin-username"
             v-model="username"
             type="text"
             placeholder="admin"
@@ -51,8 +53,9 @@ async function handleLogin() {
         </div>
 
         <div class="field">
-          <label>Şifre</label>
+          <label for="admin-password">Şifre</label>
           <input
+            id="admin-password"
             v-model="password"
             type="password"
             placeholder="••••••••"
@@ -61,7 +64,7 @@ async function handleLogin() {
           />
         </div>
 
-        <p v-if="error" class="error-msg">
+        <p v-if="error" class="error-msg" role="alert" aria-live="assertive">
           <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
         </p>
 

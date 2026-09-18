@@ -38,8 +38,9 @@ public class MediaController {
     @PostMapping("/api/v1/admin/media/upload")
     public ResponseEntity<MediaResponse> upload(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("category") MediaCategory category) {
-        return ResponseEntity.ok(mediaService.upload(file, category));
+            @RequestParam("category") MediaCategory category,
+            @RequestParam(value = "projectId", required = false) Long projectId) {
+        return ResponseEntity.ok(mediaService.upload(file, category, projectId));
     }
 
     /** DELETE /api/v1/admin/media/{id} */

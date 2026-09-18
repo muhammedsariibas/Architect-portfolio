@@ -24,7 +24,7 @@ const { t } = useI18n();
               <span class="stat-label">{{ t('about.stat1_label') }}</span>
             </div>
             <div class="stat">
-              <span class="stat-num">4+</span>
+              <span class="stat-num">{{ t('about.stat2_value') }}</span>
               <span class="stat-label">{{ t('about.stat2_label') }}</span>
             </div>
             <div class="stat">
@@ -32,10 +32,6 @@ const { t } = useI18n();
               <span class="stat-label">{{ t('about.stat3_label') }}</span>
             </div>
           </div>
-        </div>
-
-        <div class="about-img-wrap" data-aos="fade-left" data-aos-duration="700">
-          <img src="../assets/pic.jpg" alt="KD Dizayn Ofis" />
         </div>
       </div>
 
@@ -182,8 +178,7 @@ export default {
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
+  grid-template-columns: 1fr;
   align-items: center;
   margin-bottom: 80px;
 }
@@ -226,17 +221,6 @@ export default {
   color: var(--text-light);
 }
 
-.about-img-wrap {
-  overflow: hidden;
-}
-
-.about-img-wrap img {
-  width: 100%;
-  height: 440px;
-  object-fit: cover;
-  display: block;
-}
-
 /* Charts */
 .chart-row {
   display: grid;
@@ -271,8 +255,7 @@ export default {
 @media (max-width: 900px) {
   .about-section { padding: 80px 0; }
   .container { padding: 0 24px; }
-  .about-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 56px; }
-  .about-img-wrap img { height: 300px; }
+  .about-grid { gap: 40px; margin-bottom: 56px; }
   .chart-row { gap: 20px; }
 }
 
@@ -286,7 +269,6 @@ export default {
   .stats-row { gap: 16px; margin-top: 36px; padding-top: 28px; }
   .stat-num { font-size: 26px; }
   .stat-label { font-size: 10px; }
-  .about-img-wrap img { height: 220px; }
 
   .chart-row {
     grid-template-columns: 1fr;

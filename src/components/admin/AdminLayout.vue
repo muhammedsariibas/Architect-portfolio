@@ -12,8 +12,10 @@ const sidebarOpen = ref(true)
 const navItems = [
   { label: 'Dashboard',  icon: 'fa-solid fa-gauge',      to: '/admin' },
   { label: 'Medya',      icon: 'fa-solid fa-images',     to: '/admin/media' },
+  { label: 'Projeler',   icon: 'fa-solid fa-building',   to: '/admin/projects' },
   { label: 'Metinler',   icon: 'fa-solid fa-language',   to: '/admin/i18n' },
   { label: 'İletişim',   icon: 'fa-solid fa-address-book', to: '/admin/contact' },
+  { label: 'Kullanıcılar', icon: 'fa-solid fa-users',      to: '/admin/users' },
 ]
 
 function logout() {
@@ -44,6 +46,8 @@ function logout() {
           <span v-if="sidebarOpen">{{ item.label }}</span>
         </router-link>
       </nav>
+
+      <div v-if="sidebarOpen" class="mobile-sidebar-backdrop" @click="sidebarOpen = false"></div>
 
       <button class="sidebar-logout" @click="logout" title="Çıkış">
         <i class="fa-solid fa-right-from-bracket"></i>
@@ -235,6 +239,8 @@ function logout() {
   flex: 1;
 }
 
+.mobile-sidebar-backdrop { display: none; }
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -245,5 +251,9 @@ function logout() {
   .admin-content {
     padding: 20px 16px;
   }
+
+  .sidebar { transform: translateX(0); transition: transform .25s ease; }
+  .sidebar.collapsed { width: 240px; transform: translateX(-100%); }
+  .mobile-sidebar-backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: -1; }
 }
 </style>

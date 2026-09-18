@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.kddizayn.api.module.project.Project;
+import com.kddizayn.api.module.project.ProjectRepository;
 
 @Slf4j
 @Service
@@ -29,6 +31,7 @@ public class MediaService {
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024L; // 10 MB
 
     private final MediaRepository mediaRepository;
+    private final ProjectRepository projectRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -57,6 +60,10 @@ public class MediaService {
     // ── Admin ─────────────────────────────────────────────────────────────────
 
     public MediaResponse upload(MultipartFile file, MediaCategory category) {
+        return upload(file, category, null);
+    }
+
+    public MediaResponse upload(MultipartFile file, MediaCategory category, Long projectId) {
         validate(file);
 
         String originalName = file.getOriginalFilename();
@@ -71,12 +78,15 @@ public class MediaService {
         }
 
         String fileUrl = buildUrl(storedName);
+        Project project = projectId == null ? null : projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
         Media media = Media.builder()
                 .fileName(originalName)
                 .fileType(file.getContentType())
                 .filePath(targetPath.toAbsolutePath().toString())
                 .fileUrl(fileUrl)
                 .category(category)
+                .project(project)
                 .build();
 
         return toResponse(mediaRepository.save(media));
@@ -142,6 +152,7 @@ public class MediaService {
                 .fileType(m.getFileType())
                 .fileUrl(m.getFileUrl())
                 .category(m.getCategory())
+                .projectId(m.getProject() == null ? null : m.getProject().getId())
                 .createdAt(m.getCreatedAt())
                 .build();
     }

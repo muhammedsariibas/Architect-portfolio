@@ -1,6 +1,6 @@
 <script setup>
 import AdminLayout from '@/components/admin/AdminLayout.vue'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { getAllMedia, uploadMedia, deleteMedia } from '@/api/media'
 
 const media      = ref([])
@@ -27,6 +27,7 @@ const filtered = computed(() =>
 )
 
 onMounted(fetchMedia)
+onBeforeUnmount(() => { if (preview.value) URL.revokeObjectURL(preview.value) })
 
 async function fetchMedia() {
   loading.value = true
@@ -44,6 +45,7 @@ function onFileChange(e) {
   const f = e.target.files[0]
   if (!f) return
   file.value = f
+  if (preview.value) URL.revokeObjectURL(preview.value)
   preview.value = URL.createObjectURL(f)
 }
 
@@ -59,6 +61,7 @@ async function handleUpload() {
     await uploadMedia(fd)
     success.value = 'Dosya başarıyla yüklendi.'
     file.value = null
+    if (preview.value) URL.revokeObjectURL(preview.value)
     preview.value = null
     if (fileInput.value) fileInput.value.value = ''
     await fetchMedia()
@@ -87,11 +90,11 @@ async function handleDelete(id) {
       <h2 class="page-title">Medya Yönetimi</h2>
 
       <!-- Alerts -->
-      <div v-if="success" class="alert success">
+      <div v-if="success" class="alert success" role="status" aria-live="polite">
         <i class="fa-solid fa-circle-check"></i> {{ success }}
         <button @click="success = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div v-if="error" class="alert error">
+      <div v-if="error" class="alert error" role="alert" aria-live="assertive">
         <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
         <button @click="error = ''"><i class="fa-solid fa-xmark"></i></button>
       </div>

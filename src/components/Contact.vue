@@ -1,14 +1,59 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { getContact, sendContactMessage } from "@/api/contact";
+
 const { t } = useI18n();
+const loading = ref(true);
+const loadError = ref(false);
+const sent = ref(false);
+const sending = ref(false);
+const sendError = ref(false);
+const form = ref({ name: '', email: '', message: '' });
+const contact = ref({
+  phone: '+90 535 698 84 57',
+  email: 'info@kddizayn.com',
+  address: '',
+  googleMapsUrl: '',
+  instagramUrl: '',
+  linkedinUrl: '',
+  facebookUrl: '',
+  workingHours: '',
+});
+
+onMounted(async () => {
+  try {
+    const { data } = await getContact();
+    contact.value = { ...contact.value, ...data };
+  } catch {
+    loadError.value = true;
+  } finally {
+    loading.value = false;
+  }
+});
+
+async function submitContact() {
+  sent.value = false;
+  sendError.value = false;
+  sending.value = true;
+  try {
+    await sendContactMessage(form.value);
+    sent.value = true;
+    form.value = { name: '', email: '', message: '' };
+  } catch {
+    sendError.value = true;
+  } finally {
+    sending.value = false;
+  }
+}
 </script>
 
 <template>
-  <div class="contact-section" data-aos="fade-up" data-aos-duration="700">
+  <div class="contact-section" data-aos="fade-up" data-aos-duration="700" aria-labelledby="contact-title">
     <div class="container">
       <div class="section-header">
         <span class="section-eyebrow">{{ t('contact.eyebrow') }}</span>
-        <h2 class="section-title">{{ t('contact.title') }}</h2>
+        <h2 id="contact-title" class="section-title">{{ t('contact.title') }}</h2>
       </div>
 
       <div class="contact-grid">
@@ -16,14 +61,16 @@ const { t } = useI18n();
           <h3>{{ t('contact.question') }}</h3>
           <p>{{ t('contact.desc') }}</p>
 
-          <div class="info-items">
+          <p v-if="loading" class="loading-text">{{ t('contact.loading') }}</p>
+          <p v-else-if="loadError" class="inline-error" role="status">{{ t('contact.load_error') }}</p>
+          <div v-else class="info-items">
             <div class="info-item">
               <div class="info-icon">
                 <i class="fa-solid fa-location-dot"></i>
               </div>
               <div>
                 <strong>{{ t('contact.address_label') }}</strong>
-                <p>{{ t('contact.address_value') }}</p>
+                <p>{{ contact.address }}</p>
               </div>
             </div>
             <div class="info-item">
@@ -32,7 +79,7 @@ const { t } = useI18n();
               </div>
               <div>
                 <strong>{{ t('contact.phone_label') }}</strong>
-                <p><a href="tel:+905356988457">+90 535 698 84 57</a></p>
+                <p><a :href="`tel:${contact.phone.replace(/\s/g, '')}`">{{ contact.phone }}</a></p>
               </div>
             </div>
             <div class="info-item">
@@ -41,20 +88,32 @@ const { t } = useI18n();
               </div>
               <div>
                 <strong>{{ t('contact.email_label') }}</strong>
-                <p><a href="mailto:info@kddizayn.com">info@kddizayn.com</a></p>
+                <p><a :href="`mailto:${contact.email}`">{{ contact.email }}</a></p>
               </div>
             </div>
+            <div v-if="contact.workingHours" class="info-item">
+              <div class="info-icon"><i class="fa-solid fa-clock" aria-hidden="true"></i></div>
+              <div><strong>{{ t('contact.hours_label') }}</strong><p>{{ contact.workingHours }}</p></div>
+            </div>
           </div>
+
         </div>
 
-        <div class="map-wrap">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.0082149122422!2d28.812431576221336!3d41.02507621838999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa5b3eb863a73%3A0xd315a7ae7499525c!2sKD%20Dizayn%20ve%20Mimarl%C4%B1k!5e0!3m2!1str!2str!4v1692175725697!5m2!1str!2str"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="KD Dizayn Konum"
-          ></iframe>
+        <div class="contact-form-panel">
+          <h3>{{ t('contact.form_title') }}</h3>
+          <p class="panel-intro">{{ t('contact.form_intro') }}</p>
+          <form class="contact-form" @submit.prevent="submitContact">
+            <div class="form-row">
+              <label><span>{{ t('contact.name_label') }}</span><input v-model.trim="form.name" required autocomplete="name" /></label>
+              <label><span>{{ t('contact.form_email_label') }}</span><input v-model.trim="form.email" required type="email" autocomplete="email" /></label>
+            </div>
+            <label><span>{{ t('contact.message_label') }}</span><textarea v-model.trim="form.message" required rows="7"></textarea></label>
+            <button type="submit" class="form-submit" :disabled="sending">
+              {{ sending ? t('contact.sending') : t('contact.send') }}
+            </button>
+            <p v-if="sent" class="form-note" role="status">{{ t('contact.mail_note') }}</p>
+            <p v-if="sendError" class="form-error" role="alert">{{ t('contact.mail_error') }}</p>
+          </form>
         </div>
       </div>
     </div>
@@ -163,23 +222,25 @@ const { t } = useI18n();
   transition: color 0.2s;
 }
 
+.loading-text,
+.inline-error,
+.form-note { color: var(--text-mid); font-size: 14px; line-height: 1.6; }
+.inline-error { color: #a33b32; }
+.contact-form-panel { padding: 36px; background: var(--bg-section); box-shadow: var(--shadow-md); }
+.contact-form-panel h3 { font-size: 28px; color: var(--text-dark); margin-bottom: 10px; }
+.panel-intro { margin: 0 0 24px; color: var(--text-mid); font-size: 14px; line-height: 1.6; }
+.contact-form { margin-top: 0; }
+.contact-form label { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; color: var(--text-dark); font-size: 12px; font-weight: 700; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.contact-form input, .contact-form textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--border); background: var(--bg-white); font: inherit; font-size: 14px; color: var(--text-dark); outline: none; border-radius: 3px; }
+.contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,168,76,.14); }
+.form-submit { padding: 12px 22px; border: 0; background: var(--primary); color: white; font: inherit; font-weight: 700; cursor: pointer; }
+.form-submit:hover { background: var(--accent); color: var(--primary); }
+.form-submit:disabled { opacity: .65; cursor: wait; }
+.form-error { color: #a33a3a; font-size: 14px; line-height: 1.6; }
+
 .info-item a:hover {
   color: var(--accent);
-}
-
-.map-wrap {
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  min-height: 480px;
-  height: 100%;
-}
-
-.map-wrap iframe {
-  width: 100%;
-  height: 100%;
-  min-height: 480px;
-  border: 0;
-  display: block;
 }
 
 @media (max-width: 900px) {
@@ -189,14 +250,12 @@ const { t } = useI18n();
   .contact-grid { grid-template-columns: 1fr; gap: 40px; min-height: unset; }
   .contact-info h3 { font-size: 26px; }
   .contact-info > p { margin-bottom: 32px; }
-  .map-wrap { min-height: 300px; height: 300px; }
-  .map-wrap iframe { min-height: 300px; }
+  .contact-form-panel { padding: 28px 22px; }
 }
 
 @media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; gap: 0; }
   .info-items { gap: 24px; }
   .info-icon { width: 38px; height: 38px; font-size: 14px; }
-  .map-wrap { min-height: 260px; height: 260px; }
-  .map-wrap iframe { min-height: 260px; }
 }
 </style>

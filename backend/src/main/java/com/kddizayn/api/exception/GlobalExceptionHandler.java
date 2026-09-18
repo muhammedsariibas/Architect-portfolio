@@ -41,6 +41,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, "Access denied", request.getRequestURI(), null);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<CustomErrorResponse> handleConflict(IllegalStateException ex,
+                                                                HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI(), null);
+    }
+
     @ExceptionHandler(FileStorageException.class)
     public ResponseEntity<CustomErrorResponse> handleFileStorage(FileStorageException ex,
                                                                    HttpServletRequest request) {

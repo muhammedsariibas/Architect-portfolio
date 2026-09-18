@@ -14,5 +14,6 @@ public class MediaResponse {
     private String fileType;
     private String fileUrl;
     private MediaCategory category;
+    private Long projectId;
     private LocalDateTime createdAt;
 }
